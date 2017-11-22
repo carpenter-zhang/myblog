@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}站长收藏{% endblock %}
+{% block content %}
+      <div class="content-block friendly-content row">
+        <h2 class="title"><strong>站长收藏</strong></h2>
+        {% for friend in friends %}
+            <div class="col-md-4 col-xs-6">
+                <span data-toggle="tooltip" data-placement="bottom" title="点击进入 {{ friend.title }}  站点">
+                    <a href="{{ friend.url }}">{{ friend.title }}</a>
+                </span>
+            </div>
+        {% endfor %}
+      </div>
+{% endblock %}

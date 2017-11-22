@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}关于我们{% endblock %}
+{% block content %}
+      <div class="content-block contact-content">
+        <h2 class="title"><strong>联系站长</strong></h2>
+        <p><span>站长QQ：</span><a href="">757235517</a></p>
+        <p><span>站长信箱：</span><a href="mailto:757235517@qq.com">757235517@qq.com</a></p>
+      </div>
+      <div class="content-block comment">
+
+        <h2 class="title"><strong>添加留言</strong></h2>
+
+        <form action="{% url 'add_message' %}" method="post" class="form-inline" id="comment-form">
+          <div class="comment-title">
+            <div class="form-group">
+              <label for="messageName">姓名：</label>
+              <input type="text" name="user" class="form-control" id="messageName"
+              {% if request.user.is_authenticated %}value="{{ request.user.username }}" {% else %}placeholder="请输入姓名" {% endif %}>
+            </div>
+            <div class="form-group">
+              <label for="messageEmail">邮箱：</label>
+              <input type="email" name="email" class="form-control" id="messageEmail"
+              {% if request.user.is_authenticated %}value="{{ request.user.email }}" {% else %}placeholder="请输入邮箱" {% endif %}>
+            </div>
+          </div>
+          <div class="comment-form">
+            <textarea placeholder="在此处填写留言内容" name="content"></textarea>
+
+            <div class="comment-form-footer">
+                {% if not request.user.is_authenticated %}
+                    <div class="comment-form-text">请先
+                        <a href="{% url 'login' %}">登录</a> 或 <a href="{% url 'register' %}">注册</a>，也可匿名留言 </div>
+                {% endif %}
+              <div class="comment-form-btn">
+                <button type="submit" class="btn btn-default btn-comment">提交留言</button>
+              </div>
+            </div>
+          </div>
+        {% csrf_token %}
+        </form>
+
+        <div class="content-block comment-content">
+          <h2 class="title"><strong>最新留言</strong></h2>
+          <ul>
+              {% for message in new_message %}
+                <li>
+                    <span class="text"><strong>{{ message.user.username }}</strong> ({{ message.add_time }}) 留言：<br />
+                    {{ message.content }}</span></li>
+              {% endfor %}
+          </ul>
+        </div>
+      </div>
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}{{ article.name }}{% endblock %}
+{% block content %}
+      <header class="news_header">
+        <h2>{{ article.name }}</h2>
+        <ul>
+          <li>发布于 {{ article.add_time }}</li>
+          <li>栏目：<a href="" title="" >{{ article.column }}</a></li>
+          <li>来源：<a href="" title="" >{{ article.resouce }}</a></li>
+          <li>共 <strong>{{ article.see_num }}</strong> 人围观 </li>
+          <li><strong>{{ article.see_unkown_num }}</strong> 个不明物体</li>
+        </ul>
+      </header>
+      <article class="news_content">
+        {% autoescape off %}
+            {{ article.content }}
+        {% endautoescape %}
+      </article>
+
+      <div class="tags news_tags">标签：
+          {% for tag in tags %}
+            <span data-toggle="tooltip" data-placement="bottom" title="查看关于 {{ tag.name }} 的文章">
+              <a href="{% url 'article:article_list' %}?tag={{ tag.name }}">{{ tag.name }}</a>
+            </span>
+          {% endfor %}
+      </div>
+
+      <div class="content-block related-content visible-lg visible-md">
+        <h2 class="title"><strong>相关推荐</strong></h2>
+        <ul>
+            {% for relate_article in relate_articles %}
+                <li>
+                    <a target="_blank" href="{% url 'article:article_info' relate_article.id %}"><img src="{{ MEDIA_URL }}{{ relate_article.image }}" alt="">
+                        <h3> {{ relate_article.name }} </h3>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+      </div>
+
+
+      <div class="content-block comment">
+        <h2 class="title"><strong>评论</strong></h2>
+        {% if request.user.is_authenticated %}
+        <form action="{% url 'article:add_comment' %}" method="post" class="form-inline" id="comment-form">
+          <div class="comment-form">
+            <input type="hidden" name="article_id" value="{{ article.id }}">
+            <textarea placeholder="你的评论可以一针见血" name="content"></textarea>
+            <div class="comment-form-footer">
+              <div class="comment-form-text">请先评论 </div>
+              <div class="comment-form-btn">
+                <button type="submit" class="btn btn-default btn-comment">提交评论</button>
+              </div>
+            </div>
+          </div>
+        {% csrf_token %}
+        </form>
+        {% endif %}
+
+        <div class="comment-content">
+          <ul>
+              {% for comment in comments %}
+                <li>
+                    <span class="face"><img src="{{ MEDIA_URL }}{{ comment.user.image }}" alt=""></span>
+                    <span class="text"><strong>{{ comment.user.username }}</strong> ({{ comment.add_time|date:'Y-m-d' }}) 说：<br />{{ comment.content }}</span></li>
+              {% endfor %}
+          </ul>
+        </div>
+      </div>
+{% endblock %}
+{% block custom_js %}
+    <script type="text/javascript">
+    //相关推荐
+    $(function(){
+        $(".related-content ul li").hover(function(){
+            $(this).find("h3").show();
+        },function(){
+            $(this).find("h3").hide();
+        });
+    });
+    //ajax更新点赞值
+    $(function(){
+        $(".content .zambia a").click(function(){
+            var zambia = $(this);
+            var id = zambia.attr("rel"); //对应id
+            zambia.fadeOut(1000); //渐隐效果
+            $.ajax({
+                type:"POST",
+                url:"zambia.php",
+                data:"id="+id,
+                cache:false, //不缓存此页面
+                success:function(data){
+                    zambia.html(data);
+                    zambia.fadeIn(1000); //渐显效果
+                }
+            });
+            return false;
+        });
+    })
+    </script>
+{% endblock %}

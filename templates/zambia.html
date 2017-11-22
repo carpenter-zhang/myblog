@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>点赞</title>
+</head>
+
+<body>
+<script type="text/javascript">
+//向后台zambia.php发送ajax请求，请求响应成功后，更新原有的数值
+$(function(){   
+    $(".content .zambia a").click(function(){   
+        var zambia = $(this);   
+        var id = zambia.attr("rel"); //对应id   
+        zambia.fadeOut(1000); //渐隐效果   
+        $.ajax({   
+            type:"POST",   
+            url:"zambia.php",   
+            data:"id="+id,   
+            cache:false, //不缓存此页面   
+            success:function(data){   
+                zambia.html(data);   
+                zambia.fadeIn(1000); //渐显效果   
+            }   
+        });   
+        return false;   
+    });   
+})
+</script>
+</body>
+</html>

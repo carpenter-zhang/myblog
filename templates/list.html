@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+  <div class="content-block new-content">
+    <h2 class="title"><strong>最新文章</strong></h2>
+    <div class="row">
+        {% for article in articles.object_list %}
+            <div class="news-list">
+                <div class="news-img col-xs-5 col-sm-5 col-md-4">
+                    <a target="_blank" href="{% url 'article:article_info' article.id %}">
+                        <img src="{{ MEDIA_URL }}{{ article.image }}" alt="">
+                    </a>
+                </div>
+                <div class="news-info col-xs-7 col-sm-7 col-md-8">
+                  <dl>
+                    <dt> <a href="{% url 'article:article_info' article.id %}" target="_blank" > {{ article.name }} </a> </dt>
+                    <dd>
+                        <span class="name"><a href="" title="由 {% for author in article.publish_set.all %}{{ author.user  }}{% endfor %} 发布" rel="author">
+                            {% for author in article.publish_set.all %}{{ author.user  }}{% endfor %}</a>
+                        </span>
+                        <span class="identity"></span> <span class="time">
+                            {% for author in article.publish_set.all %}{{ author.add_time|date:'Y-n-d'  }}{% endfor %}
+                        </span>
+                    </dd>
+                    <dd class="text">{{ article.brief }}</dd>
+                  </dl>
+                  <div class="news_bot col-sm-7 col-md-8">
+                      <span class="tags visible-lg visible-md">
+                          {% for tag in article.tags.all %}<a href="javscript:;">{{ tag.name }}</a>{% endfor %}
+                      </span>
+                      <span class="look"> 共 <strong>{{ article.see_num }}</strong> 人围观，
+                          发现 <strong> {{ article.see_unkown_num }} </strong> 个不明物体 </span>
+                  </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="quotes pagination" style="margin-top:15px">
+        {% if articles.has_previous %}
+            <a href="?{{ articles.previous_page_number.querystring }}" class="prev">上一页</a>
+        {% endif %}
+        {% for page in articles.pages %}
+            {% if page %}
+                {% ifequal page articles.number %}
+                    <span class="current page">{{ page }}</span>
+                {% else %}
+                    <a href="?{{ page.querystring }}" class="page">{{ page }}</a>
+                {% endifequal %}
+            {% else %}
+                ...
+            {% endif %}
+        {% endfor %}
+        {% if articles.has_next %}
+            <a href="?{{ articles.next_page_number.querystring }}" class="next">下一页</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

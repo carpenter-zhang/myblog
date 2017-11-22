@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+<head>
+		<meta charset="utf-8">
+		<link href="{% static 'css/reglogin.css' %}" rel='stylesheet' type='text/css' />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<div class="main">
+		<div class="header" >
+			<h1>Login!</h1>
+		</div>
+		<p></p>
+			<form method="post" action="{% url 'login' %}">
+				<ul class="right-form">
+					<h2>Login:</h2>
+					<li><input type="text" name="username" placeholder="Username" required/></li>
+					<li><input type="password" name="password" placeholder="Password" required/></li>
+                    <div>
+                        {% for key,error in login_form.errors.items %}{{ error }}{% endfor %}
+                        {{ msg }}
+                    </div>
+					<input type="submit" value="Login" >
+					<div class="clear"> </div>
+				</ul>
+				<div class="clear"> </div>
+                {% csrf_token %}
+			</form>
+	</div>
+</body>
+</html>

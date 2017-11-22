@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <link href="{% static 'css/reglogin.css' %}" rel='stylesheet' type='text/css' />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+<body>
+	<div class="main">
+		<div class="header" >
+			<h1>Create a Free Account!</h1>
+		</div>
+		<p></p>
+			<form method="post" action="{% url 'register' %}">
+				<ul class="right-form">
+					<h2>Account:</h2>
+					<li><input name="username" type="text" value="{{ register_form.username.value }}" placeholder="Username" required/></li>
+					<li><input name="email" value="{{ register_form.email.value }}" type="email" placeholder="Email" required/></li>
+					<li><input name="password1" value="{{ register_form.password1.value }}" type="password" placeholder="password" required/></li>
+					<li><input name="password2" value="{{ register_form.password2.value }}" type="password" placeholder="password" required/></li>
+                    <div>
+                        {% for key,error in register_form.errors.items %}{{ error }}{% endfor %}
+                        {{ msg }}
+                    </div>
+					<input type="submit" value="Register" >
+					<div class="clear"> </div>
+				</ul>
+				<div class="clear"> </div>
+                {% csrf_token %}
+			</form>
+	</div>
+</body>
+</html>
